@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <title>测试jquey的ajax方法</title>
+ <style>
+  *{
+   padding:0;
+   margin:0;
+  }
+  section{
+  	margin:0 auto;
+  	width: 980px;
+  	position: relative;
+  }
+  article{
+  	width: 220px;
+  	padding:10px;
+  	float: left;
+  }
+  article img{
+  	width: 100%;
+  }
+ </style>
+</head>
+<body>
+
+	<section>
+		<article>
+			<img src="1 (1).jpg"/>
+		</article>
+		<article>
+			<img src="1 (2).jpg"/>
+		</article>
+		<article>
+			<img src="1 (1).jpg"/>
+		</article>
+		<article>
+			<img src="1 (2).jpg"/>
+		</article>
+		<article>
+			<img src="1 (1).jpg"/>
+		</article>
+		<article>
+			<img src="1 (1).jpg"/>
+		</article>
+		<article>
+			<img src="1 (2).jpg"/>
+		</article>
+		<article>
+			<img src="1 (1).jpg"/>
+		</article>
+		<article>
+			<img src="1 (2).jpg"/>
+		</article>
+		<article>
+			<img src="1 (1).jpg"/>
+		</article>
+		<article>
+			<img src="1 (2).jpg"/>
+		</article>
+		<article>
+			<img src="1 (1).jpg"/>
+		</article>
+	</section>
+	
+
+
+
+
+
+
+<script src="jquery-3.3.1.min.js"></script>
+<script>
+	function waterfall(){
+		var Arr = $("article"),
+		num = 4,
+		w = 240,
+	    hArr = [];
+
+	    Arr.each(function(index,value){
+	    	var h = Arr.eq( index).outerHeight();;
+	    	if(index < num){
+	    		hArr[index] = h;
+	    	}else{
+	    		var minH = Math.min.apply(null,hArr),
+	    		minHIndex = $.inArray(minH,hArr);
+
+	    		$(value).css({
+	    			position:"absolute",
+	    			top:minH + "px",
+	    			left:minHIndex*w + "px"
+	    		});
+	    		hArr[minHIndex] += Arr.eq(index).outerHeight();
+	    	}
+	    })
+	}
+	waterfall();
+
+
+	$(window).on("scroll",function(){
+		var a = $(document).height() - 50;
+		var b = $(window).scrollTop() + $(window).height();
+		if(b > a){
+			$.ajax({
+				url:"ajax.json",
+				type:"GET",
+				dataType:"json",
+				success:function(data){
+					var html = "";
+					for(var i=0; i < data.scrollimg.length; i++){
+						html += "<article>" + "<img src='" + data.scrollimg[i].src + "'/>" + "</article>";	
+						$("section").append(html);
+						waterfall();
+					}
+				}
+			})
+		}
+	})				
+</script>
+</body>
+</html>
